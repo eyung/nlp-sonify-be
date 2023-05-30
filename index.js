@@ -1,6 +1,10 @@
-const natural = require('natural');
+//const natural = require('natural');
 const express = require('express');
+
 const cors = require("cors");
+
+const wordnetRouter = require('./api/wordnetRouter'); 
+const nlpRouter = require('./api/nlpRouter'); 
 
 const app = express();
 app.use(express.json());
@@ -10,30 +14,9 @@ let corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// Create an instance of Natural NLP components (e.g., tokenizer, stemmer, etc.)
-const tokenizer = new natural.TreebankWordTokenizer();
-const stemmer = natural.PorterStemmer;
-
-const testString = "this is a test";
-
-// Define API endpoints
-app.get('/api/test', (req, res) => {
-  res.json({ message: 'Hello, world!' });
-});
-
-app.post('/api/tokenize', (req, res) => {
-  const text = req.body.text;
-  console.log("Text : " + text);
-  const tokens = tokenizer.tokenize(text);
-  res.json(tokens);
-});
-
-app.post('/api/stem', (req, res) => {
-  const word = req.body.word;
-  console.log("Word : " + word);
-  const stemmedWord = stemmer.stem(word);
-  res.json(stemmedWord);
-});
+// Mount API function
+app.use('/', wordnetRouter);
+app.use('/', nlpRouter);
 
 // Start the server
 const port = process.env.PORT || 3000; // Use the assigned port from Vercel or fallback to a default port

@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('../server');
+//var indexRouter = require('../server');
 
 var app = express();
 
@@ -32,6 +32,6 @@ const setContext = (req, res, next) => {
 };
 app.use(setContext);
 
-app.use('/', indexRouter);
+//app.use('/', indexRouter);
 
 module.exports = app;

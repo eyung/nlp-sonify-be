@@ -4,8 +4,6 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
-//test
-
 // Create an instance of Natural NLP components (e.g., tokenizer, stemmer, etc.)
 const tokenizer = new natural.TreebankWordTokenizer();
 const stemmer = natural.PorterStemmer;

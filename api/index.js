@@ -1,37 +1,45 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+var http = require('http')
+var express = require('express')
+var routes = require('./routes')
+var user = require('./routes/user')
+var path = require('path')
 
-//var indexRouter = require('../server');
+var favicon = require('serve-favicon')
+var logger = require('morgan')
+var methodOverride = require('method-override')
+var session = require('express-session')
+var bodyParser = require('body-parser')
+var multer = require('multer')
+var errorHandler = require('errorhandler')
 
-var app = express();
+var app = express()
 
-const whitelist = [
-  '*'
-];
+// all environments
+app.set('port', process.env.PORT || 3000)
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'pug')
+app.use(favicon(path.join(__dirname, '/public/favicon.ico')))
+app.use(logger('dev'))
+app.use(methodOverride())
+app.use(session({
+  resave: true,
+  saveUninitialized: true,
+  secret: 'uwotm8'
+}))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(multer())
+app.use(express.static(path.join(__dirname, 'public')))
 
-app.use((req, res, next) => {
-  const origin = req.get('referer');
-  const isWhitelisted = whitelist.find((w) => origin && origin.includes(w));
-  if (isWhitelisted) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization');
-    res.setHeader('Access-Control-Allow-Credentials', true);
-  }
-  // Pass to next layer of middleware
-  if (req.method === 'OPTIONS') res.sendStatus(200);
-  else next();
-});
+app.get('/', routes.index)
+app.get('/users', user.list)
 
-const setContext = (req, res, next) => {
-  if (!req.context) req.context = {};
-  next();
-};
-app.use(setContext);
+// error handling middleware should be loaded after the loading the routes
+if (app.get('env') === 'development') {
+  app.use(errorHandler())
+}
 
-//app.use('/', indexRouter);
-
-module.exports = app;
+var server = http.createServer(app)
+server.listen(app.get('port'), () => {
+  console.log('Express server listening on port ' + app.get('port'))
+})

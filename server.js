@@ -16,8 +16,8 @@ app.get('/api/test', (req, res) => {
 });
 
 app.post('/api/tokenize', (req, res) => {
-  const text = req.query.text;
-  console.log(text);
+  const text = req.body.text;
+  console.log("Text : " + text);
   const tokens = tokenizer.tokenize(text);
   res.json(tokens);
 });
@@ -30,7 +30,9 @@ app.post('/api/stem', (req, res) => {
 });
 
 // Start the server
-const port = 5000;
+// for local testing use 5000
+//const port = 5000;
+const port = process.env.PORT || 5000; // Use the assigned port from Vercel or fallback to a default port
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

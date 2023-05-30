@@ -32,7 +32,7 @@ app.post('/api/stem', (req, res) => {
 // Start the server
 // for local testing use 5000
 //const port = 5000;
-const port = process.env.PORT || 5000; // Use the assigned port from Vercel or fallback to a default port
+const port = process.env.PORT || 3000; // Use the assigned port from Vercel or fallback to a default port
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

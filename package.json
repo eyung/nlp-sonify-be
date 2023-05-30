@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/eyung/nlp-sonify-be#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "natural": "^6.5.0"
   }

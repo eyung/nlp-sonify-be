@@ -43,6 +43,3 @@ var server = http.createServer(app)
 server.listen(app.get('port'), () => {
   console.log('Express server listening on port ' + app.get('port'))
 })
-
-// Export the Express API
-module.exports = app;

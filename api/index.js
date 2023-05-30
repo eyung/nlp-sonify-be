@@ -1,8 +1,14 @@
 const natural = require('natural');
 const express = require('express');
+const cors = require("cors");
 
 const app = express();
 app.use(express.json());
+
+let corsOptions = {
+  origin: ["http://localhost:3000", "https://nlp-sonify-be.vercel.app"],
+};
+app.use(cors(corsOptions));
 
 // Create an instance of Natural NLP components (e.g., tokenizer, stemmer, etc.)
 const tokenizer = new natural.TreebankWordTokenizer();

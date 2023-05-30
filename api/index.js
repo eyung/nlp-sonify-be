@@ -1,44 +1,37 @@
-const natural = require('natural');
-const express = require('express');
-const cors = require("cors");
+var createError = require('http-errors');
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
 
-const app = express();
-app.use(express.json());
+var indexRouter = require('../routes/index');
 
-let corsOptions = {
-  origin: ["http://localhost:3000", "https://nlp-sonify-be.vercel.app"],
+var app = express();
+
+const whitelist = [
+  '*'
+];
+
+app.use((req, res, next) => {
+  const origin = req.get('referer');
+  const isWhitelisted = whitelist.find((w) => origin && origin.includes(w));
+  if (isWhitelisted) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+  }
+  // Pass to next layer of middleware
+  if (req.method === 'OPTIONS') res.sendStatus(200);
+  else next();
+});
+
+const setContext = (req, res, next) => {
+  if (!req.context) req.context = {};
+  next();
 };
-app.use(cors(corsOptions));
+app.use(setContext);
 
-// Create an instance of Natural NLP components (e.g., tokenizer, stemmer, etc.)
-const tokenizer = new natural.TreebankWordTokenizer();
-const stemmer = natural.PorterStemmer;
+app.use('/', indexRouter);
 
-const testString = "this is a test";
-
-// Define API endpoints
-app.get('/api/test', (req, res) => {
-  res.json({ message: 'Hello, world!' });
-});
-
-app.post('/api/tokenize', (req, res) => {
-  const text = req.body.text;
-  console.log("Text : " + text);
-  const tokens = tokenizer.tokenize(text);
-  res.json(tokens);
-});
-
-app.post('/api/stem', (req, res) => {
-  const word = req.body.word;
-  console.log("Word : " + word);
-  const stemmedWord = stemmer.stem(word);
-  res.json(stemmedWord);
-});
-
-// Start the server
-// for local testing use 5000
-//const port = 5000;
-const port = process.env.PORT || 3000; // Use the assigned port from Vercel or fallback to a default port
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+module.exports = app;

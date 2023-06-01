@@ -50,12 +50,30 @@ router.get('/api/wordnet/lexnames/sentence', async (req, res) => {
     const promise = new Promise((resolve, reject) => {
       wordnet.lookup(words[i], (result) => {
         if (result.length > 0) {
-          //const lexFilenums = new Set(result.map((synset) => synset.lexFilenum));
-          const lexFilenums = Array.from(new Set(result.map((synset) => synset.lexFilenum)));
+     
+          const wordInfo = result.map((synset) => ({
+            word: words[i],
+            lexFilenum: synset.lexFilenum,
+            lemma: synset.lemma,
+            pos: synset.pos,
+          }));
+
+          results.push(...wordInfo);
+
+          // Convert the Set objects to arrays because Sets are not serializable to JSON
+          //const lexFilenums = Array.from(new Set(result.map((synset) => synset.lexFilenum)));
+
           //console.log('Word:', words[i], '| Lex File Numbers:', lexFilenums);
-          results.push({ word: words[i], lexFilenum: lexFilenums });
+          //results.push({ word: words[i], lexFilenum: lexFilenums });
         } else {
-          results.push({ word: words[i], lexFilenum: 'Not found' });
+          results.push({
+            word: words[i],
+            lexFilenum: 'Not found',
+            lemma: 'Not found',
+            pos: 'Not found',
+          });
+
+          //results.push({ word: words[i], lexFilenum: 'Not found' });
         }
         resolve(); // Resolve the promise after processing the word
       });
@@ -94,13 +112,6 @@ router.get('/api/wordnet/lexnames/sentence', async (req, res) => {
     //const tag = taggedWord[1];
 
     //console.log(taggedWord);
-
-    
-
-    //const lexnames = results?.map((result) => result.lexFilenum);
-    //res.json({ word, lexnames });
-  //});
-
 
 });
 

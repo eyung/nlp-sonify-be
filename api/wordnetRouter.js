@@ -42,64 +42,66 @@ router.get('/api/wordnet/lexnames/sentence', async (req, res) => {
   // Tokenize the sentence into words
   const words = tokenizer.tokenize(sentence);
 
-  const taggedWords = words.map((word) => {
-    const tagger = new pos.Tagger();
-    const taggedWord = tagger.tag([word])[0];
-    const wordText = taggedWord[0];
-    const tag = taggedWord[1];
+  const results = [];
+  const promises = [];
+
+  // Use the WordNet module to find all lexnames of the word
+  for (let i = 0; i < words.length; i++) {
+    const promise = new Promise((resolve, reject) => {
+      wordnet.lookup(words[i], (result) => {
+        if (result.length > 0) {
+          //const lexFilenums = new Set(result.map((synset) => synset.lexFilenum));
+          const lexFilenums = Array.from(new Set(result.map((synset) => synset.lexFilenum)));
+          //console.log('Word:', words[i], '| Lex File Numbers:', lexFilenums);
+          results.push({ word: words[i], lexFilenum: lexFilenums });
+        } else {
+          results.push({ word: words[i], lexFilenum: 'Not found' });
+        }
+        resolve(); // Resolve the promise after processing the word
+      });
+    });
+  
+    promises.push(promise);
+  }
+  
+  Promise.all(promises)
+    .then(() => {
+      console.log('Results:', results);
+      res.json({ results });
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
+
+  let relation = 'unknown';
+    //if (tag.startsWith('NN')) {
+    //  relation = 'noun';
+    //} else if (tag.startsWith('VB')) {
+    //  relation = 'verb';
+    //} else if (tag.startsWith('JJ')) {
+    //  relation = 'adjective';
+    //} else if (tag.startsWith('RB')) {
+    //  relation = 'adverb';
+    //}
+
+
+
+  //const taggedWords = words.map((word) => {
+    //const tagger = new pos.Tagger();
+    //const taggedWord = tagger.tag([word])[0];
+    //const wordText = taggedWord[0];
+    //const tag = taggedWord[1];
 
     //console.log(taggedWord);
 
-    let relation = 'unknown';
-    if (tag.startsWith('NN')) {
-      relation = 'noun';
-    } else if (tag.startsWith('VB')) {
-      relation = 'verb';
-    } else if (tag.startsWith('JJ')) {
-      relation = 'adjective';
-    } else if (tag.startsWith('RB')) {
-      relation = 'adverb';
-    }
+    
 
-    //wordnet.lookup(wordText, (results) => {
-    //  const lexnames = results.length > 0 ? results[0].lexFilenum : ['Not found'];
-    //  console.log({ word: wordText, lexnames }); 
-    //});
-
-    //return { word: wordText, lexnames: [] }; // Return empty array initially
-
-    return new Promise((resolve) => {
-      wordnet.lookup(wordText, (results) => {
-
-        results.forEach(function(result) {
-
-          //const wordInfo = result.synsetOffset + result.pos + result.lexFilenum;
-          const wordInfo = results?.map((result) => result.lexFilenum);
+    //const lexnames = results?.map((result) => result.lexFilenum);
+    //res.json({ word, lexnames });
+  //});
 
 
-          console.log('------------------------------------');
-          console.log(result.synsetOffset);
-          console.log(result.pos);
-          console.log(result.lemma);
-          console.log(result.lexFilenum);
-          console.log(result.lexFilenum.lexnames);
-          //console.log(result.synonyms);
-          //console.log(result.gloss);
-        });
-
-        resolve({ word: wordText, info: wordInfo });
-      });
-    });
-  });
-
-  Promise.all(taggedWords)
-    .then((results) => {
-      res.json(results);
-    })
-    .catch((error) => {
-      console.error('WordNet lookup error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    });
 });
 
 // Export the router

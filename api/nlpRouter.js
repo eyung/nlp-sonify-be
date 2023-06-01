@@ -7,6 +7,7 @@ const router = express.Router();
 
 // Create an instance of Natural NLP components (e.g., tokenizer, stemmer, etc.)
 const tokenizer = new natural.TreebankWordTokenizer();
+const wordnet = new natural.WordNet();
 const stemmer = natural.PorterStemmer;
 
 // Define API endpoints
@@ -28,6 +29,22 @@ router.get('/api/stem', (req, res) => {
   res.json(stemmedWord);
 });
 
+//TODO:
+router.get('/api/lexname', (req, res) => {
+    const word = req.body.word;
+
+    wordnet.lookup(word, (results) => {
+    if (results.length > 0) {
+        const lexname = results[0].lexFilenum;
+        console.log('Lexname:', lexname);
+    } else {
+        console.log('Word not found in WordNet');
+    }
+    });
+
+    res.json(word);
+  });
+
 router.get('/api/pos/tags', (req, res) => {
     const sentence = req.body.sentence;
 
@@ -41,6 +58,7 @@ router.get('/api/pos/tags', (req, res) => {
     // Tokenize the sentence into words
     const words = tokenizer.tokenize(sentence);
 
+    // Tag each word with its corresponding POS
     const taggedWords = words.map((word) => {
         const tagger = new pos.Tagger();
         const taggedWord = tagger.tag([word])[0];
@@ -48,7 +66,7 @@ router.get('/api/pos/tags', (req, res) => {
         const tag = taggedWord[1];
     
         return { word: wordText, tag };
-      });
+    });
     
       res.json(taggedWords);
   });

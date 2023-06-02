@@ -8,7 +8,10 @@ const router = express.Router();
 const wordnet = new natural.WordNet();
 const tokenizer = new natural.WordTokenizer();
 
+//
 // Define API endpoints
+//
+
 // Get lexFilenums of word
 router.get('/api/wordnet/lexnames/word/:word', async (req, res) => {
   const word = req.params.word;

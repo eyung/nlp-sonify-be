@@ -42,8 +42,8 @@ router.get('/api/lexname', (req, res) => {
     }
     });
 
-    res.json(word);
-  });
+res.json(word);
+});
 
 router.get('/api/pos/tags', (req, res) => {
     const sentence = req.body.sentence;
@@ -52,8 +52,6 @@ router.get('/api/pos/tags', (req, res) => {
         res.status(400).json({ error: 'Missing sentence in request body' });
         return;
     }
-
-    console.log("Sentence : " + sentence);
 
     // Tokenize the sentence into words
     const words = tokenizer.tokenize(sentence);
@@ -68,8 +66,37 @@ router.get('/api/pos/tags', (req, res) => {
         return { word: wordText, tag };
     });
     
-      res.json(taggedWords);
-  });
+    res.json(taggedWords);
+});
 
+router.get('/api/nlp/pos/tags', async (req, res) => {
+    const sentence = req.body.sentence;
+
+    if (!sentence) {
+        res.status(400).json({ error: 'Missing sentence in request body' });
+        return;
+    }
+
+    const taggedWords = tagWords(sentence);
+    //console.log(taggedWords);
+
+    res.json(taggedWords);
+});
+
+function tagWords(sentence) {
+    const language = "EN"
+    const defaultCategory = 'N';
+    const defaultCategoryCapitalized = 'NNP';
+
+    var lexicon = new natural.Lexicon(language, defaultCategory, defaultCategoryCapitalized);
+    var ruleSet = new natural.RuleSet('EN');
+    var tagger = new natural.BrillPOSTagger(lexicon, ruleSet);
+
+    const words = tokenizer.tokenize(sentence);
+    const taggedWords = tagger.tag(words);
+
+    return taggedWords;
+}
+  
 // Export the router
 module.exports = router;

@@ -107,15 +107,6 @@ router.get('/api/wordnet/lexnames/sentence', async (req, res) => {
     //}
 
 
-
-  //const taggedWords = words.map((word) => {
-    //const tagger = new pos.Tagger();
-    //const taggedWord = tagger.tag([word])[0];
-    //const wordText = taggedWord[0];
-    //const tag = taggedWord[1];
-
-    //console.log(taggedWord);
-
 });
 
 // Export the router

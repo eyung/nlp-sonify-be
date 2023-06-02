@@ -1,5 +1,6 @@
 const natural = require('natural');
 const pos = require('pos');
+const WordPos = require('wordpos');
 const express = require('express');
 
 // Create an instance of the Express router
@@ -7,6 +8,9 @@ const router = express.Router();
 
 const wordnet = new natural.WordNet();
 const tokenizer = new natural.WordTokenizer();
+const stemmer = natural.PorterStemmer;
+
+const wordpos = new WordPos();
 
 //
 // Define API endpoints
@@ -35,7 +39,6 @@ router.get('/api/wordnet/lexnames/word/:word', async (req, res) => {
 // Get lexnames of all words in a sentence, in relation to its POS tag
 router.get('/api/wordnet/lexnames/sentence', async (req, res) => {
   const sentence = req.body.sentence;
-  console.log(sentence);
 
   if (!sentence) {
     res.status(400).json({ error: 'Missing sentence in request body' });
@@ -43,19 +46,25 @@ router.get('/api/wordnet/lexnames/sentence', async (req, res) => {
   }
 
   // Tokenize the sentence into words
-  const words = tokenizer.tokenize(sentence);
+  //const words = tokenizer.tokenize(sentence);
+  const words = tagWords(sentence);
 
   const results = [];
   const promises = [];
 
-  // Use the WordNet module to find all lexnames of the word
-  for (let i = 0; i < words.length; i++) {
+  // Use the WordNet module to find properties of the word
+  // words.taggedWords used because tagWords(sentence)
+  for (let i = 0; i < words.taggedWords.length; i++) {
     const promise = new Promise((resolve, reject) => {
-      wordnet.lookup(words[i], (result) => {
+      wordnet.lookup(words.taggedWords[i].token, (result) => {
         if (result.length > 0) {
-     
+          
+          //console.log(result.pos);
+          //if (words.taggedWords[i].tag == result.pos) {
+          //}
+
           const wordInfo = result.map((synset) => ({
-            word: words[i],
+            word: words.taggedWords[i].token,
             lexFilenum: synset.lexFilenum,
             lemma: synset.lemma,
             pos: synset.pos,
@@ -70,13 +79,12 @@ router.get('/api/wordnet/lexnames/sentence', async (req, res) => {
           //results.push({ word: words[i], lexFilenum: lexFilenums });
         } else {
           results.push({
-            word: words[i],
+            word: words.taggedWords[i].token,
             lexFilenum: 'Not found',
             lemma: 'Not found',
             pos: 'Not found',
           });
 
-          //results.push({ word: words[i], lexFilenum: 'Not found' });
         }
         resolve(); // Resolve the promise after processing the word
       });
@@ -87,7 +95,7 @@ router.get('/api/wordnet/lexnames/sentence', async (req, res) => {
   
   Promise.all(promises)
     .then(() => {
-      console.log('Results:', results);
+      //console.log('Results:', results);
       res.json({ results });
     })
     .catch((error) => {
@@ -95,19 +103,148 @@ router.get('/api/wordnet/lexnames/sentence', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     });
 
-  let relation = 'unknown';
-    //if (tag.startsWith('NN')) {
-    //  relation = 'noun';
-    //} else if (tag.startsWith('VB')) {
-    //  relation = 'verb';
-    //} else if (tag.startsWith('JJ')) {
-    //  relation = 'adjective';
-    //} else if (tag.startsWith('RB')) {
-    //  relation = 'adverb';
-    //}
-
-
 });
+
+router.get('/api/wordnet/pos/lookup', async (req, res) => {
+  const sentence = req.body.sentence;
+
+  if (!sentence) {
+      res.status(400).json({ error: 'Missing sentence in request body' });
+      return;
+  }
+
+  const words = tagWords(sentence);
+  const results = [];
+
+  for (let i = 0; i < words.taggedWords.length; i++) {
+
+    const word = words.taggedWords[i].token;
+    const pos = posRelation(words.taggedWords[i].tag);
+    let result = []; // Declare the result variable with a default value
+
+    console.log(word, pos);
+
+    switch (pos) {
+      case 'noun':
+        try {
+          result = await new Promise((resolve, reject) => {
+            wordpos.lookupNoun(word, (result) => {
+              resolve(result);
+            });
+          });
+        } catch (error) {
+          console.error('Error:', error);
+        }
+        break;
+
+      case 'verb':
+        try {
+          result = await new Promise((resolve, reject) => {
+            wordpos.lookupVerb(word, (result) => {
+              if (result.length > 0) {
+                resolve(result);
+              } else {
+                wordpos.lookupVerb(stemmer.stem(word), (result) => {
+                    resolve(result);
+                });
+              }
+              
+            });
+          });
+        } catch (error) {
+          console.error('Error:', error);
+        }
+        break;
+
+      case 'adjective':
+        try {
+          result = await new Promise((resolve, reject) => {
+            wordpos.lookupAdjective(word, (result) => {
+              resolve(result);
+            });
+          });
+        } catch (error) {
+          console.error('Error:', error);
+        }
+        break;
+
+      case 'adverb':
+        try {
+          result = await new Promise((resolve, reject) => {
+            wordpos.lookupAdverb(word, (result) => {
+              resolve(result);
+            });
+          });
+        } catch (error) {
+          console.error('Error:', error);
+        }
+        break;
+        
+      // Add cases for other POS tags here
+      default:
+        break;
+    }
+
+    if (result.length > 0) {
+      const wordInfo = result.map((synset) => ({
+        word: word,
+        lexFilenum: synset.lexFilenum,
+        lemma: synset.lemma,
+        pos: synset.pos,
+      }));
+      //console.log("pushing to results:", word);
+      results.push(...wordInfo);
+    }
+    //} else {
+    //  results.push({
+    //    word: word,
+    //    lexFilenum: 'Not found',
+    //    lemma: 'Not found',
+    //    pos: 'Not found',
+    //  });
+    }
+
+
+  //console.log('Results:', results);
+  res.json(results);
+});
+
+function tagWords(sentence) {
+  const language = "EN"
+  const defaultCategory = 'N';
+  const defaultCategoryCapitalized = 'NNP';
+
+  var lexicon = new natural.Lexicon(language, defaultCategory, defaultCategoryCapitalized);
+  var ruleSet = new natural.RuleSet('EN');
+  var tagger = new natural.BrillPOSTagger(lexicon, ruleSet);
+
+  const words = tokenizer.tokenize(sentence);
+  const taggedWords = tagger.tag(words);
+
+  return taggedWords;
+}
+
+function posRelation(postag) {
+  let relation = 'unknown';
+
+  if (postag.startsWith('NN')) {
+    relation = 'noun';
+  } else if (postag.startsWith('VB')) {
+    relation = 'verb';
+  } else if (postag.startsWith('JJ')) {
+    relation = 'adjective';
+  } else if (postag.startsWith('RB')) {
+    relation = 'adverb';
+  } else if (postag.startsWith('IN')) {
+    relation = 'preposition';
+  }
+
+  return relation;
+}
+
+function pushWordInfo(result) {
+
+}
 
 // Export the router
 module.exports = router;

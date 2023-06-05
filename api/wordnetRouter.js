@@ -127,7 +127,9 @@ router.post('/api/wordnet/lookup', async (req, res) => {
     // Declare the result variable with a default value
     let result = []; 
 
-    //console.log(word, pos);
+    console.log(word, pos);
+
+    let tempLexFileNum;
 
     // Query WordNet based on POS tag
     switch (pos) {
@@ -188,6 +190,10 @@ router.post('/api/wordnet/lookup', async (req, res) => {
         break;
         
       // Add cases for other POS tags here
+      case 'preposition':
+        tempLexFileNum = 46;
+        break;
+
       default:
         break;
     }
@@ -203,17 +209,19 @@ router.post('/api/wordnet/lookup', async (req, res) => {
         gloss: synset.gloss,
         def: synset.def,
       }));
+
       //console.log("pushing to results:", word);
       results.push(...wordInfo);
+    //}
+    } else {
+      results.push({
+        word: word,
+        lexFilenum: tempLexFileNum,
+        lemma: 'Not found',
+        pos: pos,
+      });
     }
-    //} else {
-    //  results.push({
-    //    word: word,
-    //    lexFilenum: 'Not found',
-    //    lemma: 'Not found',
-    //    pos: 'Not found',
-    //  });
-    }
+  }
 
 
   //console.log('Results:', results);
@@ -249,8 +257,12 @@ function posRelation(postag) {
     relation = 'adverb';
   } else if (postag.startsWith('IN')) {
     relation = 'preposition';
+  } else if (postag.startsWith('DT')) {
+    relation = 'determiner';
+  } else if (postag.startsWith('CC')) {
+    relation = 'coord conjuncn';
   }
-
+ 
   return relation;
 }
 

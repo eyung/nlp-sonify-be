@@ -105,7 +105,7 @@ router.get('/api/wordnet/lexnames/sentence', async (req, res) => {
 
 });
 
-router.get('/api/wordnet/pos/lookup', async (req, res) => {
+router.get('/api/wordnet/lookup', async (req, res) => {
   const sentence = req.body.sentence;
 
   if (!sentence) {
@@ -116,14 +116,20 @@ router.get('/api/wordnet/pos/lookup', async (req, res) => {
   const words = tagWords(sentence);
   const results = [];
 
+  // Loop through words
   for (let i = 0; i < words.taggedWords.length; i++) {
 
     const word = words.taggedWords[i].token;
+
+    // Find POS tag in relation to the word in sentence
     const pos = posRelation(words.taggedWords[i].tag);
-    let result = []; // Declare the result variable with a default value
 
-    console.log(word, pos);
+    // Declare the result variable with a default value
+    let result = []; 
 
+    //console.log(word, pos);
+
+    // Query WordNet based on POS tag
     switch (pos) {
       case 'noun':
         try {
@@ -143,6 +149,7 @@ router.get('/api/wordnet/pos/lookup', async (req, res) => {
             wordpos.lookupVerb(word, (result) => {
               if (result.length > 0) {
                 resolve(result);
+              // To take into account WordNet does not work with past tense of verbs
               } else {
                 wordpos.lookupVerb(stemmer.stem(word), (result) => {
                     resolve(result);
@@ -189,8 +196,12 @@ router.get('/api/wordnet/pos/lookup', async (req, res) => {
       const wordInfo = result.map((synset) => ({
         word: word,
         lexFilenum: synset.lexFilenum,
+        lexName: synset.lexname,
         lemma: synset.lemma,
         pos: synset.pos,
+        wCnt: synset.wCnt,
+        gloss: synset.gloss,
+        def: synset.def,
       }));
       //console.log("pushing to results:", word);
       results.push(...wordInfo);
@@ -240,10 +251,6 @@ function posRelation(postag) {
   }
 
   return relation;
-}
-
-function pushWordInfo(result) {
-
 }
 
 // Export the router

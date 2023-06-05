@@ -105,7 +105,7 @@ router.get('/api/wordnet/lexnames/sentence', async (req, res) => {
 
 });
 
-router.get('/api/wordnet/lookup', async (req, res) => {
+router.post('/api/wordnet/lookup', async (req, res) => {
   const sentence = req.body.sentence;
 
   if (!sentence) {
@@ -217,6 +217,7 @@ router.get('/api/wordnet/lookup', async (req, res) => {
 
 
   //console.log('Results:', results);
+  res.setHeader('Content-Type', 'application/json');
   res.json(results);
 });
 

@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 
 let corsOptions = {
-  origin: ["http://localhost:3000", "https://nlp-sonify-be.vercel.app"],
+  origin: ["http://localhost:5000", "https://nlp-sonify-be.vercel.app"],
 };
 app.use(cors(corsOptions));
 
@@ -19,7 +19,7 @@ app.use('/', wordnetRouter);
 app.use('/', nlpRouter);
 
 // Start the server
-const port = process.env.PORT || 3000; // Use the assigned port from Vercel or fallback to a default port
+const port = process.env.PORT || 5000; // Use the assigned port from Vercel or fallback to a default port
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

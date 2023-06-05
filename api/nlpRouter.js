@@ -22,11 +22,11 @@ router.get('/api/tokenize', (req, res) => {
   res.json(tokens);
 });
 
-router.get('/api/stem', (req, res) => {
+router.post('/api/stem', (req, res) => {
   const word = req.body.word;
-  console.log("Word : " + word);
   const stemmedWord = stemmer.stem(word);
-  res.json(stemmedWord);
+  //res.setHeader('Content-Type', 'application/json'); // Set response content type
+  res.json({stemmedWord});
 });
 
 //TODO:

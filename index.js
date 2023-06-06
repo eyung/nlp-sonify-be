@@ -7,7 +7,6 @@ const nlpRouter = require('./api/nlpRouter');
 const app = express();
 
 let corsOptions = {
-  //origin: ["http://localhost:5000", "https://nlp-sonify-app.vercel.app"],
   //origin: ["https://nlp-sonify-app.vercel.app", "http://localhost:5000"],
   origin: '*',
   credentials: true

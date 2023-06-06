@@ -1,6 +1,6 @@
 //const natural = require('natural');
 const express = require('express');
-const cors = require("cors");
+const cors = require('cors');
 
 const wordnetRouter = require('./api/wordnetRouter'); 
 const nlpRouter = require('./api/nlpRouter'); 

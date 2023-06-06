@@ -10,12 +10,12 @@ app.use(express.json());
 
 let corsOptions = {
   //origin: ["http://localhost:5000", "https://nlp-sonify-app.vercel.app"],
-  origin: ["https://nlp-sonify-app.vercel.app", "http://localhost:5000"],
+  //origin: ["https://nlp-sonify-app.vercel.app", "http://localhost:5000"],
+  origin: true,
+  credentials: true
 };
 
 app.use(cors(corsOptions));
-nlpRouter.options('/', cors());
-nlpRouter.post('/'), cors());
 
 // Mount API function
 app.use('/', wordnetRouter);

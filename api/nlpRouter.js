@@ -19,7 +19,7 @@ router.get('/api/tokenize', (req, res) => {
   const text = req.body.text;
   console.log("Text : " + text);
   const tokens = tokenizer.tokenize(text);
-  res.json(tokens);
+  res.json({tokens});
 });
 
 router.post('/api/stem', (req, res) => {
@@ -42,7 +42,7 @@ router.get('/api/lexname', (req, res) => {
     }
     });
 
-res.json(word);
+res.json({word});
 });
 
 router.get('/api/pos/tags', (req, res) => {
@@ -66,7 +66,7 @@ router.get('/api/pos/tags', (req, res) => {
         return { word: wordText, tag };
     });
     
-    res.json(taggedWords);
+    res.json({taggedWords});
 });
 
 router.get('/api/nlp/pos/tags', async (req, res) => {
@@ -80,7 +80,7 @@ router.get('/api/nlp/pos/tags', async (req, res) => {
     const taggedWords = tagWords(sentence);
     //console.log(taggedWords);
 
-    res.json(taggedWords);
+    res.json({taggedWords});
 });
 
 function tagWords(sentence) {

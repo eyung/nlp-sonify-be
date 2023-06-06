@@ -1,6 +1,5 @@
 //const natural = require('natural');
 const express = require('express');
-
 const cors = require("cors");
 
 const wordnetRouter = require('./api/wordnetRouter'); 
@@ -10,7 +9,7 @@ const app = express();
 app.use(express.json());
 
 let corsOptions = {
-  origin: ["http://localhost:5000", "https://nlp-sonify-be.vercel.app"],
+  origin: ["http://localhost:5000", "https://nlp-sonify-app.vercel.app"],
 };
 app.use(cors(corsOptions));
 

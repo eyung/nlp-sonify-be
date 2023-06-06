@@ -6,7 +6,7 @@ const wordnetRouter = require('./api/wordnetRouter');
 const nlpRouter = require('./api/nlpRouter'); 
 
 const app = express();
-app.use(express.json());
+
 
 let corsOptions = {
   //origin: ["http://localhost:5000", "https://nlp-sonify-app.vercel.app"],
@@ -16,6 +16,8 @@ let corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
+app.use(express.json());
 
 // Mount API function
 app.use('/', wordnetRouter);

@@ -15,7 +15,8 @@ let corsOptions = {
   credentials: true
 };
 
-app.use(cors(corsOptions));
+//app.use(cors(corsOptions));
+app.use(cors({credentials: true, origin: true, exposedHeaders: '*'}));
 
 // Mount API function
 app.use('/', wordnetRouter);

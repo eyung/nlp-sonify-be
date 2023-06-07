@@ -9,7 +9,7 @@ const app = express();
 let corsOptions = {
   //origin: ["https://nlp-sonify-app.vercel.app", "http://localhost:5000"],
   origin: '*',
-  credentials: true
+  //credentials: true
 };
 
 app.use(cors(corsOptions));

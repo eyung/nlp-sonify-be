@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 
-const wordnetRouter = require('./wordnetRouter'); 
-const nlpRouter = require('./nlpRouter'); 
+const wordnetRouter = require('./api/wordnetRouter'); 
+const nlpRouter = require('./api/nlpRouter'); 
 
 const app = express();
 

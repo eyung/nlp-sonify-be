@@ -36,7 +36,7 @@ router.get('/api/wordnet/lexnames/word/:word', async (req, res) => {
   });
 });
 
-// Get lexnames of all words in a sentence, in relation to its POS tag
+// Get lexnames of all words in a sentence
 router.get('/api/wordnet/lexnames/sentence', async (req, res) => {
   const sentence = req.body.sentence;
 
@@ -105,6 +105,7 @@ router.get('/api/wordnet/lexnames/sentence', async (req, res) => {
 
 });
 
+// Get word info in relation to its POS tag
 router.post('/api/wordnet/lookup', async (req, res) => {
   const sentence = req.body.sentence;
 
@@ -149,6 +150,7 @@ router.post('/api/wordnet/lookup', async (req, res) => {
         try {
           result = await new Promise((resolve, reject) => {
             wordpos.lookupVerb(word, (result) => {
+              console.log(stemmer.stem(word));
               if (result.length > 0) {
                 resolve(result);
               // To take into account WordNet does not work with past tense of verbs
@@ -247,20 +249,28 @@ function tagWords(sentence) {
 function posRelation(postag) {
   let relation = 'unknown';
 
-  if (postag.startsWith('NN')) {
+  if (postag.startsWith('N')) {
     relation = 'noun';
-  } else if (postag.startsWith('VB')) {
+  } else if (postag.startsWith('V')) {
     relation = 'verb';
-  } else if (postag.startsWith('JJ')) {
+  } else if (postag.startsWith('J')) {
     relation = 'adjective';
   } else if (postag.startsWith('RB')) {
     relation = 'adverb';
-  } else if (postag.startsWith('IN')) {
-    relation = 'preposition';
+  } else if (postag.startsWith('CC')) {
+    relation = 'coordinating conjunction';
+  } else if (postag.startsWith('CD')) {
+    relation = 'cardinal number';
   } else if (postag.startsWith('DT')) {
     relation = 'determiner';
-  } else if (postag.startsWith('CC')) {
-    relation = 'coord conjuncn';
+  } else if (postag.startsWith('EX')) {
+    relation = 'existential there';
+  } else if (postag.startsWith('IN')) {
+    relation = 'preposition';
+  } else if (postag.startsWith('TO')) {
+    relation = 'to';
+  } else if (postag.startsWith('W')) {
+    relation = 'wh';
   }
  
   return relation;

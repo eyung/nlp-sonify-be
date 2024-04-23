@@ -29,6 +29,12 @@ router.post('/api/stem', (req, res) => {
   res.json({stemmedWord});
 });
 
+router.post('/api/lemma', (req, res) => {
+    const word = req.body.word;
+    const stemmedWord = stemmer.stem(word);
+    res.json({stemmedWord});
+  });
+
 //TODO:
 router.get('/api/lexname', (req, res) => {
     const word = req.body.word;

@@ -1,4 +1,4 @@
-import OpenAI from "openai";
+//import OpenAI from "openai";
 
 const express = require('express');
 const { completeChat, generateEmbedding, convertTextToSpeech, transcribeSpeech } = require('./openai');

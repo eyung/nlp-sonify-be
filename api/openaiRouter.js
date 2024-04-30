@@ -1,7 +1,7 @@
 //import OpenAI from "openai";
 
 const express = require('express');
-const { completeChat, generateEmbedding, convertTextToSpeech, transcribeSpeech } = require('./openai');
+const { completeChat, generateEmbedding, convertTextToSpeech, transcribeSpeech } = require('./openai.js');
 
 // Create an instance of the Express router
 const router = express.Router();

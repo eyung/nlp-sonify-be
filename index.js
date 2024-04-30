@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 // Mount API function
 app.use('/', wordnetRouter);
 app.use('/', nlpRouter);
-app.use('/', openaiRouter);
+app.use('/api', openaiRouter);
 //app.use('/', router);
 
 

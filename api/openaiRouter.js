@@ -1,21 +1,11 @@
-//import OpenAI from "openai";
-
 const express = require('express');
 const axios = require('axios');
-const { completeChat, generateEmbedding, convertTextToSpeech, transcribeSpeech } = require('./openai.js');
+//const { completeChat, generateEmbedding, convertTextToSpeech, transcribeSpeech } = require('./openai.js');
 
 // Create an instance of the Express router
 const router = express.Router();
 
-//const fetch = require('node-fetch');
-
-//const OPENAI_API_KEY = process.env.OPENAI_TEST_KEY;
-
-//const openai = new OpenAI({
-//  apiKey: process.env.OPENAI_TEST_KEY,
-//});
-
-// Test
+// Test chat completion end point
 router.post('/analyze', async (req, res) => {
   const { text } = req.body;
   // Call OpenAI API here with the text

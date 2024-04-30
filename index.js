@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const wordnetRouter = require('./api/wordnetRouter'); 
 const nlpRouter = require('./api/nlpRouter'); 
 const openaiRouter = require('./api/openaiRouter');
-const { analyzeText, completeChat, generateEmbedding, convertTextToSpeech, transcribeSpeech } = require('./openaiRouter'); 
 
 const app = express();
 
@@ -17,53 +16,8 @@ let corsOptions = {
 
 app.use(cors(corsOptions));
 
-//app.use(express.json());
+
 app.use(bodyParser.json());
-
-// Create an instance of Express Router
-const router = express.Router();
-
-// Route for text analysis
-router.post('/api/analyze', async (req, res) => {
-  const { text } = req.body;
-  
-  // Call the OpenAI API for text analysis
-  const analysisResult = await analyzeText(text);
-
-  // Respond with the analysis result
-  res.json(analysisResult);
-});
-
-// Route for chat completion
-router.post('/api/chat', async (req, res) => {
-  const { prompt } = req.body;
-  
-  try {
-    // Call the OpenAI API for chat completion
-    const response = await completeChat(prompt);
-
-    // Respond with the chat completion result
-    res.json(response);
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-// Route for generating embeddings
-router.post('/embeddings', async (req, res) => {
-  // Implementation for generating embeddings API
-});
-
-// Route for text-to-speech
-router.post('/text-to-speech', async (req, res) => {
-  // Implementation for text-to-speech API
-});
-
-// Route for speech-to-text
-router.post('/speech-to-text', async (req, res) => {
-  // Implementation for speech-to-text API
-});
 
 
 // Mount API function

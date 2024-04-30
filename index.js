@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 app.use('/', wordnetRouter);
 app.use('/', nlpRouter);
 app.use('/', openaiRouter);
-app.use('/', router);
+//app.use('/', router);
 
 
 // Start the server

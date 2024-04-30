@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 const router = express.Router();
 
 // Route for text analysis
-router.post('/analyze', async (req, res) => {
+router.post('/api/analyze', async (req, res) => {
   const { text } = req.body;
   
   // Call the OpenAI API for text analysis
@@ -34,7 +34,7 @@ router.post('/analyze', async (req, res) => {
 });
 
 // Route for chat completion
-router.post('/chat', async (req, res) => {
+router.post('/api/chat', async (req, res) => {
   const { prompt } = req.body;
   
   try {

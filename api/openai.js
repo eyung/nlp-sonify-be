@@ -1,6 +1,6 @@
 // openai.js
 const axios = require('axios');
-const OPENAI_API_KEY = process.env.OPENAI_TEST_KEY
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 
 // Function for chat completion using OpenAI's API
 async function completeChat(prompt) {

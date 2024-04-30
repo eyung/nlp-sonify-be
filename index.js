@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 
 const wordnetRouter = require('./api/wordnetRouter'); 
 const nlpRouter = require('./api/nlpRouter'); 
+const openaiRouter = require('./api/openaiRouter');
 const { analyzeText, completeChat, generateEmbedding, convertTextToSpeech, transcribeSpeech } = require('./openaiRouter'); 
 
 const app = express();
@@ -68,6 +69,7 @@ router.post('/speech-to-text', async (req, res) => {
 // Mount API function
 app.use('/', wordnetRouter);
 app.use('/', nlpRouter);
+app.use('/', openaiRouter);
 app.use('/', router);
 
 

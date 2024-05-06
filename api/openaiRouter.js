@@ -33,34 +33,116 @@ router.post('/analyze', async (req, res) => {
   res.json(response.data);
 });
 
-module.exports = router;
-
-// Route for chat completion
-router.post('/chat', async (req, res) => {
-  const { prompt } = req.body;
-  
-  try {
-    const response = await completeChat(prompt);
-    res.json(response);
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
+// Get complexity scores
+router.post('/complexity-scores', async (req, res) => {
+  const { text } = req.body;
+  // Call OpenAI API here with the text
+  const prompt = {
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {
+        "role": "system",
+        "content": "Calculate the sentiment scores of the input to indicate whether the overall sentiment is positive, negative, or neutral. This will be represented as an array eg. [0.7, 0.2, 0.1] for 70% positive, 20% neutral, 10% negative. Do not explain how your arrived at your answer, simply provide the array as the output."
+      },
+      {
+        "role": "user",
+        "content": text
+      }
+    ],
+    "temperature": 0,
+    "top_p": 1,
+    "n": 1,
+    "stream": false,
+    "max_tokens": 2500,
+    "presence_penalty": 0,
+    "frequency_penalty": 2
+  };
+  const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
+  res.json(response.data);
 });
 
-// Route for generating embeddings
-router.post('/embeddings', async (req, res) => {
-  // Implementation for generating embeddings API
+// Get sentiment scores
+router.post('/sentiment-scores', async (req, res) => {
+  const { text } = req.body;
+  // Call OpenAI API here with the text
+  const prompt = {
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {
+        "role": "system",
+        "content": "Calculate the sentiment scores of the input to indicate whether the overall sentiment is positive, negative, or neutral. This will be represented as an array eg. [0.7, 0.2, 0.1] for 70% positive, 20% neutral, 10% negative. Do not explain how your arrived at your answer, simply provide the array as the output. "
+      },
+      {
+        "role": "user",
+        "content": text
+      }
+    ],
+    "temperature": 0,
+    "top_p": 1,
+    "n": 1,
+    "stream": false,
+    "max_tokens": 2500,
+    "presence_penalty": 0,
+    "frequency_penalty": 2
+  };
+  const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
+  res.json(response.data);
 });
 
-// Route for text-to-speech
-router.post('/text-to-speech', async (req, res) => {
-  // Implementation for text-to-speech API
+// Get concreteness scores
+router.post('/concreteness-scores', async (req, res) => {
+  const { text } = req.body;
+  // Call OpenAI API here with the text
+  const prompt = {
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {
+        "role": "system",
+        "content": "Measure the degree to which the text refers to tangible, recognizable things versus abstract concepts. This will be represented as an float value ranging from 1.0 to 0.0, where 1.0 indicates that the text refers to tangible things and 0.0 indicates abstractiveness. Do not explain how your arrived at your answer, simply provide the value as the output. "
+      },
+      {
+        "role": "user",
+        "content": text
+      }
+    ],
+    "temperature": 0,
+    "top_p": 1,
+    "n": 1,
+    "stream": false,
+    "max_tokens": 2500,
+    "presence_penalty": 0,
+    "frequency_penalty": 2
+  };
+  const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
+  res.json(response.data);
 });
 
-// Route for speech-to-text
-router.post('/speech-to-text', async (req, res) => {
-  // Implementation for speech-to-text API
+// Get emotional intensity scores
+router.post('/emotional-intensity-scores', async (req, res) => {
+  const { text } = req.body;
+  // Call OpenAI API here with the text
+  const prompt = {
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {
+        "role": "system",
+        "content": "Measure the 'arousel' level of the text, as defined in psychology which refers to the text's level of alertness or exciteness expressed. Considering high-intensity emotions like anger or excitement. This will be represented as an float value ranging from 1.0 to 0.0, where 1.0 indicates a high level of emotional intensity and 0.0 indicates lowest level of emotional intensity. Do not explain how your arrived at your answer, simply provide the value as the output. "
+      },
+      {
+        "role": "user",
+        "content": text
+      }
+    ],
+    "temperature": 0,
+    "top_p": 1,
+    "n": 1,
+    "stream": false,
+    "max_tokens": 2500,
+    "presence_penalty": 0,
+    "frequency_penalty": 2
+  };
+  const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
+  res.json(response.data);
 });
 
 module.exports = router;

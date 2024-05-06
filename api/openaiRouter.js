@@ -81,7 +81,7 @@ router.post('/sentiment-scores', async (req, res) => {
     "top_p": 1,
     "n": 1,
     "stream": false,
-    "max_tokens": 2500,
+    "max_tokens": 250,
     "presence_penalty": 0,
     "frequency_penalty": 2
   };
@@ -109,7 +109,7 @@ router.post('/concreteness-scores', async (req, res) => {
     "top_p": 1,
     "n": 1,
     "stream": false,
-    "max_tokens": 2500,
+    "max_tokens": 250,
     "presence_penalty": 0,
     "frequency_penalty": 2
   };
@@ -137,7 +137,7 @@ router.post('/emotional-intensity-scores', async (req, res) => {
     "top_p": 1,
     "n": 1,
     "stream": false,
-    "max_tokens": 2500,
+    "max_tokens": 250,
     "presence_penalty": 0,
     "frequency_penalty": 2
   };

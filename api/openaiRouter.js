@@ -42,7 +42,7 @@ router.post('/complexity-scores', async (req, res) => {
     "messages": [
       {
         "role": "system",
-        "content": "Calculate the sentiment scores of the input to indicate whether the overall sentiment is positive, negative, or neutral. This will be represented as an array eg. [0.7, 0.2, 0.1] for 70% positive, 20% neutral, 10% negative. Do not explain how your arrived at your answer, simply provide the array as the output."
+        "content": "Measure the complexity of the text, considering factors like vocabulary richness, sentence length, and readability scores (like Flesch-Kincaid), and others. This will be represented as an float value ranging from 1.0 to -0.1, where 1.0 indicates high complexity and -1.0 indicates lowest level of complexity. Do not explain how your arrived at your answer, simply provide the value as the output. "
       },
       {
         "role": "user",

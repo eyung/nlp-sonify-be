@@ -32,12 +32,8 @@
     "method-override": "^3.0.0",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
-    "natural": "^6.5.0",
     "path": "^0.12.7",
-    "pos": "^0.4.2",
     "routes": "^2.1.0",
-    "serve-favicon": "^2.5.0",
-    "wordnet-db": "^3.1.14",
-    "wordpos": "^2.1.0"
+    "serve-favicon": "^2.5.0"
   }
 }

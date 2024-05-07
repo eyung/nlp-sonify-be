@@ -2,8 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-const wordnetRouter = require('./api/wordnetRouter'); 
-const nlpRouter = require('./api/nlpRouter'); 
 const openaiRouter = require('./api/openaiRouter');
 
 const app = express();
@@ -21,8 +19,6 @@ app.use(bodyParser.json());
 
 
 // Mount API function
-app.use('/', wordnetRouter);
-app.use('/', nlpRouter);
 app.use('/api', openaiRouter);
 //app.use('/', router);
 

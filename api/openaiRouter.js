@@ -42,7 +42,7 @@ router.post('/complexity-scores', async (req, res) => {
     "messages": [
       {
         "role": "system",
-        "content": "Measure the complexity of the text, considering factors like vocabulary richness, sentence length, and readability scores (like Flesch-Kincaid), and others. This will be represented as an float value ranging from 1.0 to -0.1, where 1.0 indicates high complexity and -1.0 indicates lowest level of complexity. Do not explain how your arrived at your answer, simply provide the value as the output. "
+        "content": "Calculate the complexity score of the given text. This score should be a float value ranging from -1.0 to 1.0, where 1.0 indicates the highest level of complexity and -1.0 indicates the lowest level of complexity. The score should take into account a wide range of factors, including but not limited to: Vocabulary richness: Consider the diversity and sophistication of the words used in the text; Sentence length: Longer sentences are generally more complex than shorter ones.; Readability scores: Use established readability metrics like Flesch-Kincaid, Gunning Fog, or Coleman-Liau; Syntactic complexity: Consider the complexity of the sentence structures used in the text; Semantic complexity: Consider the complexity of the ideas and concepts conveyed by the text. The calculation should be deterministic, meaning that the same text should always yield the same complexity score. Do not provide an explanation of how the score was calculated, simply return the score as the output."
       },
       {
         "role": "user",

@@ -32,6 +32,9 @@ router.post('/analyze', async (req, res) => {
   res.json(response.data);
 });
 
+// V1 implementations
+// Calculate scores on the whole body of the text
+
 // Get complexity scores
 router.post('/complexity-scores', async (req, res) => {
   const { text } = req.body;
@@ -126,6 +129,37 @@ router.post('/emotional-intensity-scores', async (req, res) => {
       {
         "role": "system",
         "content": "Measure the 'arousel' level of the text, as defined in psychology which refers to the text's level of alertness or exciteness expressed. Considering high-intensity emotions like anger or excitement. This will be represented as an float value ranging from 1.0 to 0.0, where 1.0 indicates a high level of emotional intensity and 0.0 indicates lowest level of emotional intensity. Do not explain how your arrived at your answer, simply provide the value as the output. "
+      },
+      {
+        "role": "user",
+        "content": text
+      }
+    ],
+    "temperature": 0,
+    "top_p": 1,
+    "n": 1,
+    "stream": false,
+    "max_tokens": 250,
+    "presence_penalty": 0,
+    "frequency_penalty": 2
+  };
+  const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
+  res.json(response.data);
+});
+
+// V2 implementations
+// Calculate scores based on each sentence or phrase of the input text
+
+// Get complexity scores
+router.post('/v2/complexity-scores', async (req, res) => {
+  const { text } = req.body;
+  // Call OpenAI API here with the text
+  const prompt = {
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {
+        "role": "system",
+        "content": "Calculate the sentiment scores of each sentence or phrase of the given text. The scores should be float values ranging from -1.0 to 1.0, representing the percentage of negative, neutral, or positive sentiments . For example, 0.7 would indicate 70% positive, -0.1 means 10% negative sentiment, and 0.0 is neutral. The scores should take into account a wide range of factors, including but not limited to: Lexical sentiment: Consider the sentiment of individual words and phrases in the text; Contextual sentiment: Consider the sentiment implied by the context in which words and phrases are used; Structural sentiment: Consider the sentiment conveyed by the structure of the text, such as the use of exclamatory sentences to express strong emotion. The calculation should be deterministic, meaning that the same text should always yield the same sentiment scores. Do not provide an explanation of how the scores were calculated, simply return the scores as an array as the output."
       },
       {
         "role": "user",

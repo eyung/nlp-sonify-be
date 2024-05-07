@@ -70,7 +70,7 @@ router.post('/sentiment-scores', async (req, res) => {
     "messages": [
       {
         "role": "system",
-        "content": "Calculate the sentiment scores of the input to indicate whether the overall sentiment is positive, negative, or neutral. This will be represented as an array eg. [0.7, 0.2, 0.1] for 70% positive, 20% neutral, 10% negative. Do not explain how your arrived at your answer, simply provide the array as the output. "
+        "content": "Calculate the sentiment scores of the given text. This score should be an array of three float values ranging from 0.0 to 1.0, representing the percentages of positive, neutral, and negative sentiment respectively. For example, [0.7, 0.2, 0.1] would indicate 70% positive, 20% neutral, and 10% negative sentiment. The scores should take into account a wide range of factors, including but not limited to: Lexical sentiment: Consider the sentiment of individual words and phrases in the text; Contextual sentiment: Consider the sentiment implied by the context in which words and phrases are used; Structural sentiment: Consider the sentiment conveyed by the structure of the text, such as the use of exclamatory sentences to express strong emotion. The calculation should be deterministic, meaning that the same text should always yield the same sentiment scores. Do not provide an explanation of how the scores were calculated, simply return the scores as the output."
       },
       {
         "role": "user",

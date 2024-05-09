@@ -29,7 +29,8 @@ async function callOpenAI(text, systemMessage) {
         "stream": false,
         "max_tokens": 250,
         "presence_penalty": 0,
-        "frequency_penalty": 2
+        "frequency_penalty": 2,
+        "type": "json_object",
     };
   
     const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });

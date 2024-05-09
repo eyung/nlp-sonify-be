@@ -32,8 +32,11 @@ router.post('/analyze', async (req, res) => {
   res.json(response.data);
 });
 
+// -------------------------------------------------------------------
 // V1 implementations
-// Calculate scores on the whole body of the text
+// Calculate scores based on the whole body of the text
+// Return string
+// -------------------------------------------------------------------
 
 // Get complexity scores
 router.post('/complexity-scores', async (req, res) => {
@@ -147,9 +150,11 @@ router.post('/emotional-intensity-scores', async (req, res) => {
   res.json(response.data);
 });
 
+// -------------------------------------------------------------------
 // V2 implementations
 // Calculate scores based on each sentence or phrase of the input text
 // Return JSON object as payload
+// -------------------------------------------------------------------
 
 // Get complexity scores
 router.post('/v2/sentiment-scores', async (req, res) => {

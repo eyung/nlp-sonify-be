@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const openaiRouter = require('./api/openaiRouter');
+const aiRouter = require('./api/aiRouter');
 
 const app = express();
 
@@ -20,7 +21,7 @@ app.use(bodyParser.json());
 
 // Mount API function
 app.use('/api', openaiRouter);
-//app.use('/', router);
+app.use('/api', aiRouter);
 
 
 // Start the server

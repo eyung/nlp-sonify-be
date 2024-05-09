@@ -159,7 +159,7 @@ router.post('/v2/complexity-scores', async (req, res) => {
     "messages": [
       {
         "role": "system",
-        "content": "Calculate the sentiment scores of each sentence or phrase of the given text. The scores should be float values ranging from -1.0 to 1.0, representing the percentage of negative, neutral, or positive sentiments . For example, 0.7 would indicate 70% positive, -0.1 means 10% negative sentiment, and 0.0 is neutral. The scores should take into account a wide range of factors, including but not limited to: Lexical sentiment: Consider the sentiment of individual words and phrases in the text; Contextual sentiment: Consider the sentiment implied by the context in which words and phrases are used; Structural sentiment: Consider the sentiment conveyed by the structure of the text, such as the use of exclamatory sentences to express strong emotion. The calculation should be deterministic, meaning that the same text should always yield the same sentiment scores. Do not provide an explanation of how the scores were calculated, simply return the scores as an array as the output."
+        "content": "For each sentence or phrase, create a JSON object where the key is the first word of the sentence, value is the sentiment score from -1.0 to 1.0. The scores should consider a wide range of factors, including but not limited to lexical, contextual and structural sentiments."
       },
       {
         "role": "user",
@@ -172,7 +172,8 @@ router.post('/v2/complexity-scores', async (req, res) => {
     "stream": false,
     "max_tokens": 250,
     "presence_penalty": 0,
-    "frequency_penalty": 2
+    "frequency_penalty": 2,
+    "response_format":{"type": "json_object"}
   };
   const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
   res.json(response.data);

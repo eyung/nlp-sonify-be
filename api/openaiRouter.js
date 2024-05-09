@@ -149,6 +149,7 @@ router.post('/emotional-intensity-scores', async (req, res) => {
 
 // V2 implementations
 // Calculate scores based on each sentence or phrase of the input text
+// Return JSON object as payload
 
 // Get complexity scores
 router.post('/v2/sentiment-scores', async (req, res) => {

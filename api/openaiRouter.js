@@ -157,6 +157,35 @@ router.post('/emotional-intensity-scores', async (req, res) => {
 // -------------------------------------------------------------------
 
 // Get complexity scores
+router.post('/v2/complexity-scores', async (req, res) => {
+  const { text } = req.body;
+  // Call OpenAI API here with the text
+  const prompt = {
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {
+        "role": "system",
+        "content": "For each sentence or phrase, create a JSON object where the key is the first word of the sentence, value is the complexity score from -1.0 to 1.0 where 1.0 indicates the highest level of complexity and -1.0 indicates the lowest level of complexity of the sentence. Consider a wide range of factors, including but not limited to vocabulary richness, sentence length, readability scores (using established metrics like Flesch-Kincaid, Gunning Fog, or Coleman-Liau), syntatic complexity, and semantic complexity."
+      },
+      {
+        "role": "user",
+        "content": text
+      }
+    ],
+    "temperature": 0,
+    "top_p": 1,
+    "n": 1,
+    "stream": false,
+    "max_tokens": 650,
+    "presence_penalty": 0,
+    "frequency_penalty": 2,
+    "response_format":{"type": "json_object"}
+  };
+  const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
+  res.json(response.data);
+});
+
+// Get sentiment scores
 router.post('/v2/sentiment-scores', async (req, res) => {
   const { text } = req.body;
   // Call OpenAI API here with the text
@@ -166,6 +195,64 @@ router.post('/v2/sentiment-scores', async (req, res) => {
       {
         "role": "system",
         "content": "For each sentence or phrase, create a JSON object where the key is the first word of the sentence, value is the sentiment score from -1.0 to 1.0. The scores should consider a wide range of factors, including but not limited to lexical, contextual and structural sentiments."
+      },
+      {
+        "role": "user",
+        "content": text
+      }
+    ],
+    "temperature": 0,
+    "top_p": 1,
+    "n": 1,
+    "stream": false,
+    "max_tokens": 650,
+    "presence_penalty": 0,
+    "frequency_penalty": 2,
+    "response_format":{"type": "json_object"}
+  };
+  const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
+  res.json(response.data);
+});
+
+// Get concreteness scores
+router.post('/v2/concreteness-scores', async (req, res) => {
+  const { text } = req.body;
+  // Call OpenAI API here with the text
+  const prompt = {
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {
+        "role": "system",
+        "content": "For each sentence or phrase, create a JSON object where the key is the first word of the sentence, value is the concreteness score from 1.0 to 0.0 where 1.0 indicates that the text refers to tangible things and 0.0 indicates abstractiveness. The scores should measure the degree to which the text refers to tangible, recognizable things versus abstract concepts."
+      },
+      {
+        "role": "user",
+        "content": text
+      }
+    ],
+    "temperature": 0,
+    "top_p": 1,
+    "n": 1,
+    "stream": false,
+    "max_tokens": 650,
+    "presence_penalty": 0,
+    "frequency_penalty": 2,
+    "response_format":{"type": "json_object"}
+  };
+  const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
+  res.json(response.data);
+});
+
+// Get emotional-intensity scores
+router.post('/v2/emotional-intensity-scores', async (req, res) => {
+  const { text } = req.body;
+  // Call OpenAI API here with the text
+  const prompt = {
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {
+        "role": "system",
+        "content": "For each sentence or phrase, create a JSON object where the key is the first word of the sentence, value is the emotional-intensity score from 1.0 to 0.0 where 1.0 indicates a high level of emotional intensity and 0.0 indicates lowest level of emotional intensity. The scores should measure the 'arousel' level of the text, as defined in psychology which refers to the text's level of alertness or exciteness expressed. Considering high-intensity emotions like anger or excitement."
       },
       {
         "role": "user",

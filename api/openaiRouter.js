@@ -151,7 +151,7 @@ router.post('/emotional-intensity-scores', async (req, res) => {
 // Calculate scores based on each sentence or phrase of the input text
 
 // Get complexity scores
-router.post('/v2/complexity-scores', async (req, res) => {
+router.post('/v2/sentiment-scores', async (req, res) => {
   const { text } = req.body;
   // Call OpenAI API here with the text
   const prompt = {

@@ -161,7 +161,7 @@ router.post('/v2/complexity-scores', async (req, res) => {
   const { text } = req.body;
   // Call OpenAI API here with the text
   const prompt = {
-    "model": "gpt-4o",
+    "model": "gpt-3.5-turbo",
     "messages": [
       {
         "role": "system",
@@ -190,7 +190,7 @@ router.post('/v2/sentiment-scores', async (req, res) => {
   const { text } = req.body;
   // Call OpenAI API here with the text
   const prompt = {
-    "model": "gpt-4o",
+    "model": "gpt-3.5-turbo",
     "messages": [
       {
         "role": "system",
@@ -219,7 +219,7 @@ router.post('/v2/concreteness-scores', async (req, res) => {
   const { text } = req.body;
   // Call OpenAI API here with the text
   const prompt = {
-    "model": "gpt-4o",
+    "model": "gpt-3.5-turbo",
     "messages": [
       {
         "role": "system",
@@ -248,7 +248,7 @@ router.post('/v2/emotional-intensity-scores', async (req, res) => {
   const { text } = req.body;
   // Call OpenAI API here with the text
   const prompt = {
-    "model": "gpt-4o",
+    "model": "gpt-3.5-turbo",
     "messages": [
       {
         "role": "system",

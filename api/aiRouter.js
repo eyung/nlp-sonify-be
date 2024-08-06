@@ -53,15 +53,21 @@ router.post('/scores', async (req, res) => {
 });
 
 // Test end point for combining scores
+// Using GPT 4o mini model
 router.post('/v1/scores', async (req, res) => {
   const { text } = req.body;
   // Call OpenAI API here with the text
   const prompt = {
-    "model": "gpt-3.5-turbo",
+    "model": "gpt-4o-mini",
     "messages": [
       {
         "role": "system",
-        "content": "As a researcher for textual analysis, for each sentence or phrase, create a set of JSON objects where the key is the first word of the sentence, the values are the following: 1) Complexity Score from -1.0 to 1.0 where 1.0 indicates the highest level of complexity and -1.0 indicates the lowest; 2) Sentiment Analysis Score from -1.0 to 1.0, consider a wide range of factors, including but not limited to lexical, contextual and structural sentiments; 3) Concreteness Score from 1.0 to 0.0 where 1.0 indicates that the text refers to tangible things and 0.0 indicates abstractiveness; 4) Emotional-Intesity Score from 1.0 to 0.0 where 1.0 indicates a high level of emotional intensity and 0.0 indicates lowest level of emotional intensity."
+        "content": [
+          {
+            "type": "text",
+            "text": "As a researcher for textual analysis, for each sentence or phrase, create a collection of JSON objects where the keys are the first word of each sentence, the values are the following: 1) Complexity Score from -1.0 to 1.0 where 1.0 indicates the highest level of complexity and -1.0 indicates the lowest; 2) Sentiment Analysis Score from -1.0 to 1.0, consider a wide range of factors, including but not limited to lexical, contextual and structural sentiments; 3) Concreteness Score from 1.0 to 0.0 where 1.0 indicates that the text refers to tangible things and 0.0 indicates abstractiveness; 4) Emotional-Intesity Score from 1.0 to 0.0 where 1.0 indicates a high level of emotional intensity and 0.0 indicates lowest level of emotional intensity."
+          }
+        ]
       },
       {
         "role": "user",
@@ -70,11 +76,9 @@ router.post('/v1/scores', async (req, res) => {
     ],
     "temperature": 0,
     "top_p": 1,
-    "n": 1,
-    "stream": false,
-    "max_tokens": 650,
+    "max_tokens": 950,
     "presence_penalty": 0,
-    "frequency_penalty": 2,
+    "frequency_penalty": 0,
     "response_format":{"type": "json_object"}
   };
   const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });

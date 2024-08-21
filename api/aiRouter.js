@@ -6,7 +6,7 @@ const { z } = require('zod');
 const router = express.Router();
 
 // Define schema for the request body using Zod
-const schema = z.object({
+const scores = z.object({
   sentences: z.array(
     z.object({
       word: z.string(),
@@ -77,10 +77,7 @@ router.post('/v2/scores', async (req, res) => {
     "max_tokens": 1050,
     "presence_penalty": 0,
     "frequency_penalty": 0,
-    "response_format": {
-      "type": "json_object",
-      "schema": schema
-    }
+    "response_format": zodResponseFormat(scores, "scores"),
   };
 
   try {

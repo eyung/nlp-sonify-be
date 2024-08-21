@@ -1,6 +1,5 @@
 import express from 'express';
 import axios from 'axios';
-import OpenAI from 'openai';
 import { z } from 'zod';
 import { zodResponseFormat } from 'openai/helpers/zod';
 
@@ -11,12 +10,11 @@ const router = express.Router();
 const scores = z.object({
   sentences: z.array(
     z.object({
-      word: z.object({
-        "Complexity Score": z.number().min(0.0).max(1.0),
-        "Sentiment Analysis Score": z.number().min(0.0).max(1.0),
-        "Concreteness Score": z.number().min(0.0).max(1.0),
-        "Emotional-Intensity Score": z.number().min(0.0).max(1.0)
-      })
+      word: z.string(),
+      "Complexity Score": z.number().min(0.0).max(1.0),
+      "Sentiment Analysis Score": z.number().min(0.0).max(1.0),
+      "Concreteness Score": z.number().min(0.0).max(1.0),
+      "Emotional-Intensity Score": z.number().min(0.0).max(1.0)
     })
   )
 });
@@ -81,12 +79,10 @@ router.post('/v2/scores', async (req, res) => {
     "presence_penalty": 0,
     "frequency_penalty": 0,
     "response_format": zodResponseFormat(scores, "sentences"),
-    //"response_format":{"type": "json_object"}
   };
 
   try {
     const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
-    console.log(response.data); // Log the response data
     const validatedData = schema.parse(response.data);
     res.json(validatedData);
     //res.json(response.data);

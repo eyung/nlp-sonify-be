@@ -1,9 +1,9 @@
 const express = require('express');
 const axios = require('axios');
 
-import OpenAI from "openai";
-import { z } from "zod";
-import { zodResponseFormat } from "openai/helpers/zod";
+const OpenAI = require('openai');
+const { z } = require('zod');
+const zodResponseFormat = require('openai/helpers/zod');
 
 // Create an instance of the Express router
 const router = express.Router();

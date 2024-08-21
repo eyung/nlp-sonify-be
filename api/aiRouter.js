@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 
+import OpenAI from "openai";
 import { z } from "zod";
 import { zodResponseFormat } from "openai/helpers/zod";
 

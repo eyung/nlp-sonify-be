@@ -7,7 +7,8 @@ const router = express.Router();
 
 // Define schema for the request body using Zod
 const schema = z.object({
-  firstWord: z.string(),
+  sentences: z.string(),
+  word: z.string(),
   complexityScore: z.number().min(0.0).max(1.0),
   sentimentScore: z.number().min(0.0).max(1.0),
   concretenessScore: z.number().min(0.0).max(1.0),

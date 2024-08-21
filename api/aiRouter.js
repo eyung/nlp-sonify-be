@@ -10,17 +10,17 @@ import { zodResponseFormat } from "openai/helpers/zod";
 const router = express.Router();
 
 // Define schema for the request body using Zod
-const sentenceSchema = z.object({
-  word: z.object({
-    "Complexity Score": z.number(),
-    "Sentiment Analysis Score": z.number(),
-    "Concreteness Score": z.number(),
-    "Emotional-Intensity Score": z.number()
-  })
-});
-
-const responseSchema = z.object({
-  sentences: z.array(sentenceSchema)
+const scores = z.object({
+  sentences: z.array(
+    z.object({
+      word: z.object({
+        "Complexity Score": z.number().min(0.0).max(1.0),
+        "Sentiment Analysis Score": z.number().min(0.0).max(1.0),
+        "Concreteness Score": z.number().min(0.0).max(1.0),
+        "Emotional-Intensity Score": z.number().min(0.0).max(1.0)
+      })
+    })
+  )
 });
 
 // Test end point for combining scores
@@ -82,7 +82,7 @@ router.post('/v2/scores', async (req, res) => {
     "max_tokens": 1050,
     "presence_penalty": 0,
     "frequency_penalty": 0,
-    "response_format": zodResponseFormat(responseSchema, "word"),
+    "response_format": zodResponseFormat(scores, "sentences"),
     //"response_format":{"type": "json_object"}
   };
 

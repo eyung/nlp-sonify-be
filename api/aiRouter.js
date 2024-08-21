@@ -84,11 +84,16 @@ router.post('/v2/scores', async (req, res) => {
   };
 
   try {
-    const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
-    const validatedData = schema.parse(response.data);
+    const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, {
+      headers: {
+        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    const validatedData = schema.parse(response.data.choices[0].message.content);
     res.json(validatedData);
   } catch (e) {
-    res.status(400).json({ error: e.errors });
+    res.status(400).json({ error: e.message });
   }
 });
 

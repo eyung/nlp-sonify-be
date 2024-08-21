@@ -7,12 +7,15 @@ const router = express.Router();
 
 // Define schema for the request body using Zod
 const schema = z.object({
-  sentences: z.string(),
-  word: z.string(),
-  complexityScore: z.number().min(0.0).max(1.0),
-  sentimentScore: z.number().min(0.0).max(1.0),
-  concretenessScore: z.number().min(0.0).max(1.0),
-  emotionalIntensityScore: z.number().min(0.0).max(1.0)
+  sentences: z.array(
+    z.object({
+      word: z.string(),
+      complexityScore: z.number().min(0.0).max(1.0),
+      sentimentScore: z.number().min(0.0).max(1.0),
+      concretenessScore: z.number().min(0.0).max(1.0),
+      emotionalIntensityScore: z.number().min(0.0).max(1.0)
+    })
+  )
 });
 
 // Test end point for combining scores

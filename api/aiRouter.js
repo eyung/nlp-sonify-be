@@ -38,7 +38,7 @@ router.post('/v1/scores', async (req, res) => {
     ],
     "temperature": 0,
     "top_p": 1,
-    "max_tokens": 950,
+    "max_tokens": 5000,
     "presence_penalty": 0,
     "frequency_penalty": 0,
     "response_format":{"type": "json_object"}

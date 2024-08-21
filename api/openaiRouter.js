@@ -1,5 +1,5 @@
-const express = require('express');
-const axios = require('axios');
+import express from 'express';
+import axios from 'axios';
 
 // Create an instance of the Express router
 const router = express.Router();
@@ -272,4 +272,4 @@ router.post('/v2/emotional-intensity-scores', async (req, res) => {
   res.json(response.data);
 });
 
-module.exports = router;
+export default router;

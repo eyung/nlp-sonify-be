@@ -1,9 +1,8 @@
-const express = require('express');
-const axios = require('axios');
-
-const OpenAI = require('openai');
-const { z } = require('zod');
-const zodResponseFormat = require('openai/helpers/zod');
+import express from 'express';
+import axios from 'axios';
+import OpenAI from 'openai';
+import { z } from 'zod';
+import { zodResponseFormat } from 'openai/helpers/zod';
 
 // Create an instance of the Express router
 const router = express.Router();
@@ -81,7 +80,7 @@ router.post('/v2/scores', async (req, res) => {
     "max_tokens": 1050,
     "presence_penalty": 0,
     "frequency_penalty": 0,
-    "response_format": zodResponseFormat(scores, "sentences"),
+    //"response_format": zodResponseFormat(scores, "sentences"),
     //"response_format":{"type": "json_object"}
   };
 
@@ -95,4 +94,4 @@ router.post('/v2/scores', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

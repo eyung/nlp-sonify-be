@@ -1,9 +1,8 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-
-const openaiRouter = require('./api/openaiRouter');
-const aiRouter = require('./api/aiRouter');
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import aiRouter from './api/aiRouter';
+import openaiRouter from './api/openaiRouter';
 
 const app = express();
 
@@ -31,4 +30,4 @@ app.listen(port, () => {
 });
 
 // Export the Express API
-module.exports = app
+export default app

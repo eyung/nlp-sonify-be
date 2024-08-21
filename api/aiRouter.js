@@ -82,7 +82,7 @@ router.post('/v2/scores', async (req, res) => {
     "max_tokens": 1050,
     "presence_penalty": 0,
     "frequency_penalty": 0,
-    "response_format": zodResponseFormat(scores, "sentences"),
+    //"response_format": zodResponseFormat(scores, "sentences"),
     //"response_format":{"type": "json_object"}
   };
 

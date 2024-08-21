@@ -22,7 +22,7 @@ const scores = z.object({
 // Using GPT 4o mini model
 router.post('/v1/scores', async (req, res) => {
   const { text } = req.body;
-  // Call OpenAI API here with the text
+
   const prompt = {
     "model": "gpt-4o-mini",
     "messages": [
@@ -84,7 +84,6 @@ router.post('/v2/scores', async (req, res) => {
     const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, {
       headers: {
         'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-        'Content-Type': 'application/json'
       }
     });
     const validatedData = schema.parse(response.data.choices[0].message.content);

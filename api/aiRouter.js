@@ -10,11 +10,12 @@ const router = express.Router();
 const scores = z.object({
   sentences: z.array(
     z.object({
-      word: z.string(),
-      "Complexity Score": z.number().min(0.0).max(1.0),
-      "Sentiment Analysis Score": z.number().min(0.0).max(1.0),
-      "Concreteness Score": z.number().min(0.0).max(1.0),
-      "Emotional-Intensity Score": z.number().min(0.0).max(1.0)
+      word: z.object({
+        "Complexity Score": z.number().min(0.0).max(1.0),
+        "Sentiment Analysis Score": z.number().min(0.0).max(1.0),
+        "Concreteness Score": z.number().min(0.0).max(1.0),
+        "Emotional-Intensity Score": z.number().min(0.0).max(1.0)
+      })
     })
   )
 });
@@ -83,9 +84,9 @@ router.post('/v2/scores', async (req, res) => {
 
   try {
     const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
-    const validatedData = schema.parse(response.data);
-    res.json(validatedData);
-    //res.json(response.data);
+    //const validatedData = schema.parse(response.data);
+    //res.json(validatedData);
+    res.json(response.data);
   } catch (e) {
     res.status(400).json({ error: e.message });
   }

@@ -76,15 +76,15 @@ router.post('/v2/scores', async (req, res) => {
     "top_p": 1,
     "n": 1,
     "stream": false,
-    "max_tokens": 1050,
+    "max_tokens": 950,
     "presence_penalty": 0,
     "frequency_penalty": 0,
-    "response_format": zodResponseFormat(scores, "sentences"),
+    "response_format": zodResponseFormat(scores, "scores"),
   };
 
   try {
-    const response = await axios.post('https://api.openai.com/v1/chat/completions/parse', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
-    //const validatedData = schema.parse(response.data);
+    const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
+    //const validatedData = scores.parse(response.data);
     //res.json(validatedData);
     res.json(response.data);
   } catch (e) {

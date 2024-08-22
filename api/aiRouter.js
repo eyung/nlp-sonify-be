@@ -11,10 +11,10 @@ const scores = z.object({
   sentences: z.array(
     z.object({
       word: z.object({
-        "Complexity Score": z.number().min(0.0).max(1.0),
-        "Sentiment Analysis Score": z.number().min(0.0).max(1.0),
-        "Concreteness Score": z.number().min(0.0).max(1.0),
-        "Emotional-Intensity Score": z.number().min(0.0).max(1.0)
+        "Complexity Score": z.number().min(-1.0).max(1.0),
+        "Sentiment Analysis Score": z.number().min(-1.0).max(1.0),
+        "Concreteness Score": z.number().min(-1.0).max(1.0),
+        "Emotional-Intensity Score": z.number().min(-1.0).max(1.0)
       })
     })
   )
@@ -58,7 +58,7 @@ router.post('/v1/scores', async (req, res) => {
 // Using GPT 4o mini model
 router.post('/v2/scores', async (req, res) => {
   const { text } = req.body;
-  const systemMessage = "For each sentence or phrase, create a collection of JSON objects where the keys are the first word of each sentence, the values are the following: 1) Complexity Score from 0.0 to 1.0 where 1.0 indicates the highest level of complexity and 0.0 indicates the lowest; 2) Sentiment Analysis Score from 0.0 to 1.0, consider a wide range of factors, including but not limited to lexical, contextual and structural sentiments; 3) Concreteness Score from 0.0 to 1.0 where 1.0 indicates that the text refers to tangible things and 0.0 indicates abstractiveness; 4) Emotional-Intesity Score from 0.0 to 1.0 where 1.0 indicates a high level of emotional intensity and 0.0 indicates lowest level.";
+  const systemMessage = "For each sentence or phrase, create a collection of JSON objects where the keys are the first word of each sentence, the values are the following: 1) Complexity Score from -1.0 to 1.0 where 1.0 indicates the highest level of complexity and -1.0 indicates the lowest; 2) Sentiment Analysis Score from -1.0 to 1.0, consider a wide range of factors, including but not limited to lexical, contextual and structural sentiments; 3) Concreteness Score from -1.0 to 1.0 where 1.0 indicates that the text refers to tangible things and -1.0 indicates abstractiveness; 4) Emotional-Intesity Score from -1.0 to 1.0 where 1.0 indicates a high level of emotional intensity and -1.0 indicates lowest level.";
   
   const prompt = {
     "model": "gpt-4o-mini",

@@ -145,24 +145,54 @@ router.post('/v3/scores', async (req, res) => {
       "type": "json_schema",
       "json_schema": {
         "name": "scoresSchema",
-        "type": "array",
-        "items": {
+        "strict": true,
+        "schema": {
           "type": "object",
           "properties": {
-            "word": {
-              "type": "object",
-              "properties": {
-                "Complexity Score": { "type": "number", "minimum": -1.0, "maximum": 1.0 },
-                "Sentiment Analysis Score": { "type": "number", "minimum": -1.0, "maximum": 1.0 },
-                "Concreteness Score": { "type": "number", "minimum": -1.0, "maximum": 1.0 },
-                "Emotional-Intensity Score": { "type": "number", "minimum": -1.0, "maximum": 1.0 }
+            "sentences": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "word": {
+                    "type": "string"
+                  },
+                  "Complexity Score": {
+                    "type": "number"
+                  },
+                  "Sentiment Analysis Score": {
+                    "type": "number"
+                  },
+                  "Concreteness Score": {
+                    "type": "number"
+                  },
+                  "Emotional-Intensity Score": {
+                    "type": "number"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "word",
+                  "Complexity Score",
+                  "Sentiment Analysis Score",
+                  "Concreteness Score",
+                  "Emotional-Intensity Score"
+                ]
               },
-              "required": ["Complexity Score", "Sentiment Analysis Score", "Concreteness Score", "Emotional-Intensity Score"]
+              "additionalProperties": false,
+              "required": [
+                "Complexity Score",
+                "Sentiment Analysis Score",
+                "Concreteness Score",
+                "Emotional-Intensity Score"
+              ]
             }
           },
-          "required": ["word"]
-        },
-        "strict": true
+          "additionalProperties": false,
+          "required": [
+            "sentences"
+          ]
+        }
       }
     },
   };

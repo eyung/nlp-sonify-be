@@ -20,6 +20,20 @@ const scores = z.object({
   )
 });
 
+// Define schema for the response body using Zod
+const wordSchema = z.object({
+  "Complexity Score": z.number().min(-1.0).max(1.0),
+  "Sentiment Analysis Score": z.number().min(-1.0).max(1.0),
+  "Concreteness Score": z.number().min(-1.0).max(1.0),
+  "Emotional-Intensity Score": z.number().min(-1.0).max(1.0)
+});
+
+const scoresSchema = z.array(
+  z.object({
+    word: wordSchema
+  })
+);
+
 // Test end point for combining scores
 // Using GPT 4o mini model
 router.post('/v1/scores', async (req, res) => {
@@ -120,13 +134,13 @@ router.post('/v3/scores', async (req, res) => {
     "max_tokens": 950,
     "presence_penalty": 0,
     "frequency_penalty": 0,
-    "response_format": zodResponseFormat(scores, "scores"),
+    "response_format": zodResponseFormat(scoresSchema, "scoresSchema"),
     //"response_format": { "type": "json_object" },
   };
 
   try {
     const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
-    const validatedData = scores.parse(response.data);
+    const validatedData = scoresSchema.parse(response.data);
     res.json(validatedData);
     //res.json(response.data);
   } catch (e) {

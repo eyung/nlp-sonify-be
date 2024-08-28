@@ -22,6 +22,7 @@ const scores = z.object({
 
 // Define the JSON schema manually
 const scoresSchema = {
+  "name": "scoresSchema",
   "type": "array",
   "items": {
     "type": "object",

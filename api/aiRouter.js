@@ -141,11 +141,18 @@ router.post('/v3/scores', async (req, res) => {
     "frequency_penalty": 0,
     //"response_format": zodResponseFormat(scoresSchema, "scoresSchema"),
     //"response_format": { "type": "json_object" },
-    "response_format": {
+    response_format: {
       "type": "json_schema",
-      "json_schema": scoresSchema,
-      "strict": true
-    }
+      "json_schema": {
+        "name": "scores",
+        "schema": {
+          "type": "object",
+          "required": [],
+          "properties": {}
+        },
+        "strict": false
+      }
+    },
   };
 
   //if (completion.choices[0].finish_reason === "length") {

@@ -20,19 +20,26 @@ const scores = z.object({
   )
 });
 
-// Define schema for the response body using Zod
-const wordSchema = z.object({
-  "Complexity Score": z.number().min(-1.0).max(1.0),
-  "Sentiment Analysis Score": z.number().min(-1.0).max(1.0),
-  "Concreteness Score": z.number().min(-1.0).max(1.0),
-  "Emotional-Intensity Score": z.number().min(-1.0).max(1.0)
-});
-
-const scoresSchema = z.array(
-  z.object({
-    word: wordSchema
-  })
-);
+// Define the JSON schema manually
+const scoresSchema = {
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "word": {
+        "type": "object",
+        "properties": {
+          "Complexity Score": { "type": "number", "minimum": -1.0, "maximum": 1.0 },
+          "Sentiment Analysis Score": { "type": "number", "minimum": -1.0, "maximum": 1.0 },
+          "Concreteness Score": { "type": "number", "minimum": -1.0, "maximum": 1.0 },
+          "Emotional-Intensity Score": { "type": "number", "minimum": -1.0, "maximum": 1.0 }
+        },
+        "required": ["Complexity Score", "Sentiment Analysis Score", "Concreteness Score", "Emotional-Intensity Score"]
+      }
+    },
+    "required": ["word"]
+  }
+};
 
 // Test end point for combining scores
 // Using GPT 4o mini model
@@ -134,15 +141,25 @@ router.post('/v3/scores', async (req, res) => {
     "max_tokens": 950,
     "presence_penalty": 0,
     "frequency_penalty": 0,
-    "response_format": zodResponseFormat(scoresSchema, "scoresSchema"),
+    //"response_format": zodResponseFormat(scoresSchema, "scoresSchema"),
     //"response_format": { "type": "json_object" },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": scoresSchema,
+      "strict": true
+    }
   };
+
+  if (completion.choices[0].finish_reason === "length") {
+    // Handle the case where the model did not return a complete response
+    throw new Error("Incomplete response");
+  }
 
   try {
     const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
-    const validatedData = scoresSchema.parse(response.data);
-    res.json(validatedData);
-    //res.json(response.data);
+    //const validatedData = scoresSchema.parse(response.data);
+    //res.json(validatedData);
+    res.json(response.data);
   } catch (e) {
     res.status(400).json({ error: e.message });
   }

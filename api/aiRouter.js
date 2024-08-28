@@ -147,10 +147,10 @@ router.post('/v3/scores', async (req, res) => {
     }
   };
 
-  if (completion.choices[0].finish_reason === "length") {
+  //if (completion.choices[0].finish_reason === "length") {
     // Handle the case where the model did not return a complete response
-    throw new Error("Incomplete response");
-  }
+  //  throw new Error("Incomplete response");
+  //}
 
   try {
     const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });

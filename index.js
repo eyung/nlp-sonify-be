@@ -7,12 +7,13 @@ import openaiRouter from './api/openaiRouter.js';
 const app = express();
 
 let corsOptions = {
-  origin: ["https://nlp-sonify-app.vercel.app", "http://localhost:5000"],
+  origin: ["https://nlp-sonify-app.vercel.app", "http://nlp-sonify-app.vercel.app", "http://localhost:5000"],
   //origin: '*',
   credentials: true
 };
 
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Handle preflight requests
 app.use(bodyParser.json());
 
 // Mount API function

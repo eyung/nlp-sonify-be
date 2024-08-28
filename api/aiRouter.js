@@ -144,13 +144,25 @@ router.post('/v3/scores', async (req, res) => {
     response_format: {
       "type": "json_schema",
       "json_schema": {
-        "name": "scores",
-        "schema": {
+        "name": "scoresSchema",
+        "type": "array",
+        "items": {
           "type": "object",
-          "required": [],
-          "properties": {}
+          "properties": {
+            "word": {
+              "type": "object",
+              "properties": {
+                "Complexity Score": { "type": "number", "minimum": -1.0, "maximum": 1.0 },
+                "Sentiment Analysis Score": { "type": "number", "minimum": -1.0, "maximum": 1.0 },
+                "Concreteness Score": { "type": "number", "minimum": -1.0, "maximum": 1.0 },
+                "Emotional-Intensity Score": { "type": "number", "minimum": -1.0, "maximum": 1.0 }
+              },
+              "required": ["Complexity Score", "Sentiment Analysis Score", "Concreteness Score", "Emotional-Intensity Score"]
+            }
+          },
+          "required": ["word"]
         },
-        "strict": false
+        "strict": true
       }
     },
   };
@@ -164,7 +176,7 @@ router.post('/v3/scores', async (req, res) => {
     const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
     //const validatedData = scoresSchema.parse(response.data);
     //res.json(validatedData);
-    console.log(response.data);
+
     res.json(response.data);
   } catch (e) {
     res.status(400).json({ error: e.message });

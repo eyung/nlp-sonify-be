@@ -156,6 +156,7 @@ router.post('/v3/scores', async (req, res) => {
     const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
     //const validatedData = scoresSchema.parse(response.data);
     //res.json(validatedData);
+    console.log(response.data);
     res.json(response.data);
   } catch (e) {
     res.status(400).json({ error: e.message });

@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import aiRouter from './api/aiRouter.js';
-import openaiRouter from './api/openaiRouter.js';
+import aiRouter from './aiRouter.js';
+import openaiRouter from './openaiRouter.js';
 
 const app = express();
 

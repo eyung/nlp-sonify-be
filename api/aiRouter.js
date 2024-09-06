@@ -305,4 +305,99 @@ router.post('/v4/scores', async (req, res) => {
   res.json(results);
 });
 
+// Endpoint for scores related to text analysis
+// Using OpenAI Structured Outputs as response format
+// Input is split into chunks of 1000 tokens for better performance
+// Using GPT 4o mini model
+router.post('/v5/scores', async (req, res) => {
+  const { text } = req.body;
+  const systemMessage = "For each sentence or phrase, create a collection of JSON objects where the keys are the sentences, the values are the following: 1) Complexity Score from -1.0 to 1.0 where 1.0 indicates the highest level of complexity and -1.0 indicates the lowest; 2) Sentiment Analysis Score from -1.0 to 1.0, consider a wide range of factors, including but not limited to lexical, contextual and structural sentiments; 3) Concreteness Score from -1.0 to 1.0 where 1.0 indicates that the text refers to tangible things and -1.0 indicates abstractiveness; 4) Emotional-Intesity Score from -1.0 to 1.0 where 1.0 indicates a high level of emotional intensity and -1.0 indicates lowest level.";
+  
+  const chunks = text.match(/[\s\S]{1,1000}/g) || []; // Split text into chunks of 1000 characters
+  const results = [];
+
+  for (const chunk of chunks) {
+    const prompt = {
+      "model": "gpt-4o-mini",
+      "messages": [
+        {
+          "role": "system",
+          "content": systemMessage
+        },
+        {
+          "role": "user",
+          "content": chunk
+        }
+      ],
+      "temperature": 0,
+      "top_p": 1,
+      "n": 1,
+      "stream": false,
+      "max_tokens": 950,
+      "presence_penalty": 0,
+      response_format: {
+        "type": "json_schema",
+        "json_schema": {
+          "name": "scoresSchema",
+          "strict": true,
+          "schema": {
+            "type": "object",
+            "required": [
+              "sentences"
+            ],
+            "properties": {
+              "sentences": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "word",
+                    "Complexity Score",
+                    "Sentiment Analysis Score",
+                    "Concreteness Score",
+                    "Emotional-Intensity Score",
+                    "Activeness Score"
+                  ],
+                  "properties": {
+                    "word": {
+                      "type": "string"
+                    },
+                    "Activeness Score": {
+                      "type": "number"
+                    },
+                    "Complexity Score": {
+                      "type": "number"
+                    },
+                    "Concreteness Score": {
+                      "type": "number"
+                    },
+                    "Sentiment Analysis Score": {
+                      "type": "number"
+                    },
+                    "Emotional-Intensity Score": {
+                      "type": "number"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+    };
+
+    try {
+      const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
+      results.push(response.data);
+    } catch (e) {
+      return res.status(400).json({ error: e.message });
+    }
+  }
+
+
+  res.json(results);
+});
+
 export default router;

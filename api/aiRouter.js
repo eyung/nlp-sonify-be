@@ -42,8 +42,10 @@ const scoresSchema = {
   }
 };
 
+// -------------------------------------------------------------------
 // Test end point for combining scores
 // Using GPT 4o mini model
+// -------------------------------------------------------------------
 router.post('/v1/scores', async (req, res) => {
   const { text } = req.body;
 
@@ -75,9 +77,11 @@ router.post('/v1/scores', async (req, res) => {
   res.json(response.data);
 });
 
+// -------------------------------------------------------------------
 // Endpoint for scores related to text analysis
 // Output is structured as JSON objects
 // Using GPT 4o mini model
+// -------------------------------------------------------------------
 router.post('/v2/scores', async (req, res) => {
   const { text } = req.body;
   const systemMessage = "For each sentence or phrase, create a collection of JSON objects where the keys are the first word of each sentence, the values are the following: 1) Complexity Score from -1.0 to 1.0 where 1.0 indicates the highest level of complexity and -1.0 indicates the lowest; 2) Sentiment Analysis Score from -1.0 to 1.0, consider a wide range of factors, including but not limited to lexical, contextual and structural sentiments; 3) Concreteness Score from -1.0 to 1.0 where 1.0 indicates that the text refers to tangible things and -1.0 indicates abstractiveness; 4) Emotional-Intesity Score from -1.0 to 1.0 where 1.0 indicates a high level of emotional intensity and -1.0 indicates lowest level.";
@@ -112,10 +116,11 @@ router.post('/v2/scores', async (req, res) => {
   }
 });
 
-
+// -------------------------------------------------------------------
 // Endpoint for scores related to text analysis
 // Using OpenAI Structured Outputs as response format
 // Using GPT 4o mini model
+// -------------------------------------------------------------------
 router.post('/v3/scores', async (req, res) => {
   const { text } = req.body;
   const systemMessage = "For each sentence or phrase, create a collection of JSON objects where the keys are the first word of each sentence, the values are the following: 1) Complexity Score from -1.0 to 1.0 where 1.0 indicates the highest level of complexity and -1.0 indicates the lowest; 2) Sentiment Analysis Score from -1.0 to 1.0, consider a wide range of factors, including but not limited to lexical, contextual and structural sentiments; 3) Concreteness Score from -1.0 to 1.0 where 1.0 indicates that the text refers to tangible things and -1.0 indicates abstractiveness; 4) Emotional-Intesity Score from -1.0 to 1.0 where 1.0 indicates a high level of emotional intensity and -1.0 indicates lowest level.";
@@ -305,10 +310,12 @@ router.post('/v4/scores', async (req, res) => {
   res.json(results);
 });
 
+// -------------------------------------------------------------------
 // Endpoint for scores related to text analysis
 // Using OpenAI Structured Outputs as response format
 // Input is split into chunks of 1000 tokens for better performance
 // Using GPT 4o mini model
+// -------------------------------------------------------------------
 router.post('/v5/scores', async (req, res) => {
   const { text } = req.body;
   const systemMessage = "For each sentence or phrase, create a collection of JSON objects where the keys are the sentences, the values are the following: 1) Complexity Score from -1.0 to 1.0 where 1.0 indicates the highest level of complexity and -1.0 indicates the lowest; 2) Sentiment Analysis Score from -1.0 to 1.0, consider a wide range of factors, including but not limited to lexical, contextual and structural sentiments; 3) Concreteness Score from -1.0 to 1.0 where 1.0 indicates that the text refers to tangible things and -1.0 indicates abstractiveness; 4) Emotional-Intesity Score from -1.0 to 1.0 where 1.0 indicates a high level of emotional intensity and -1.0 indicates lowest level.";

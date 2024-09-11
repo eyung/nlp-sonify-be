@@ -2,10 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import aiRouter from './aiRouter.js';
-import openaiRouter from './openaiRouter.js';
 
 const app = express();
 
+// Middleware
 let corsOptions = {
   origin: ["https://nlp-sonify-app.vercel.app", "http://nlp-sonify-app.vercel.app", "http://localhost:5000"],
   //origin: '*',
@@ -17,7 +17,6 @@ app.options('*', cors(corsOptions)); // Handle preflight requests
 app.use(bodyParser.json());
 
 // Mount API function
-app.use('/api', openaiRouter);
 app.use('/api', aiRouter);
 
 // Error handling middleware

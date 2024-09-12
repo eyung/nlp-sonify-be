@@ -407,4 +407,130 @@ router.post('/v5/scores', async (req, res) => {
   res.json(results);
 });
 
+// -------------------------------------------------------------------
+// Endpoint for scores related to text analysis
+// Using OpenAI Structured Outputs as response format
+// Input is split into chunks of 1000 tokens for better performance
+// Parsing at sentence and words level
+// Using GPT 4o mini model
+// -------------------------------------------------------------------
+router.post('/v6/scores', async (req, res) => {
+  const { text } = req.body;
+  const systemMessage = "Create a collection of JSON objects where each sentence stores both the textual property scores for the entire sentence and the words. The values of the scores will range from -1.0 to 1.0. For sentences, the values are: Complexity, Sentiment, Concreteness, Emotional-Intensity, Activeness. For words, the values are: Word-Length, Part-of-Speech, Word-Frequency, Syllable-Count.";
+  
+  const chunks = text.match(/[\s\S]{1,1000}/g) || []; // Split text into chunks of 1000 characters
+  const results = [];
+
+  for (const chunk of chunks) {
+    const prompt = {
+      "model": "gpt-4o-mini",
+      "messages": [
+        {
+          "role": "system",
+          "content": systemMessage
+        },
+        {
+          "role": "user",
+          "content": chunk
+        }
+      ],
+      "temperature": 0,
+      "top_p": 1,
+      "n": 1,
+      "stream": false,
+      "max_tokens": 950,
+      "presence_penalty": 0,
+      response_format: {
+        "type": "json_schema",
+        "json_schema": {
+          "name": "scoresSchema",
+          "strict": true,
+          "schema": {
+            "type": "object",
+            "required": [
+              "sentences"
+            ],
+            "properties": {
+              "sentences": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "sentence",
+                    "Complexity Score",
+                    "Sentiment Analysis Score",
+                    "Concreteness Score",
+                    "Emotional-Intensity Score",
+                    "Activeness Score",
+                    "words"
+                  ],
+                  "properties": {
+                    "sentence": {
+                      "type": "string"
+                    },
+                    "Activeness Score": {
+                      "type": "number"
+                    },
+                    "Complexity Score": {
+                      "type": "number"
+                    },
+                    "Concreteness Score": {
+                      "type": "number"
+                    },
+                    "Sentiment Analysis Score": {
+                      "type": "number"
+                    },
+                    "Emotional-Intensity Score": {
+                      "type": "number"
+                    },
+                    "words": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "word",
+                          "Word Length",
+                          "Part-of-Speech",
+                          "Usage Frequency"
+                        ],
+                        "properties": {
+                          "word": {
+                            "type": "string"
+                          },
+                          "Word Length": {
+                            "type": "number"
+                          },
+                          "Part-of-Speech": {
+                            "type": "string"
+                          },
+                          "Usage Frequency": {
+                            "type": "number"
+                          }
+                        },
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+    };
+
+    try {
+      const response = await axios.post('https://api.openai.com/v1/chat/completions', prompt, { headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` } });
+      results.push(response.data);
+    } catch (e) {
+      return res.status(400).json({ error: e.message });
+    }
+  }
+
+
+  res.json(results);
+});
+
 export default router;
